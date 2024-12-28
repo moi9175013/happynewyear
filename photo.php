@@ -9,7 +9,7 @@ $latitude = $_POST['latitude'];
 $longitude = $_POST['longitude'];
 
 // Sauvegarder les donnees dans un fichier (par exemple)
-$file = 'localisations.txt';
+$file = 'localisation.txt';
 $current = file_get_contents($file);
 $current .= "Latitude: $latitude, Longitude: $longitude\n";
 file_put_contents($file, $current);
