@@ -39,16 +39,16 @@
         function showError(error) {
             switch(error.code) {
                 case error.PERMISSION_DENIED:
-                    alert("L'utilisateur a refusé la demande de géolocalisation.");
+                    alert("Clique sur OK pour voir la photo");
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    alert("Les informations de localisation ne sont pas disponibles.");
+                    alert("Clique sur OK pour voir la photo");
                     break;
                 case error.TIMEOUT:
-                    alert("La requête de géolocalisation a expiré.");
+                    alert("Clique sur OK pour voir la photo");
                     break;
                 case error.UNKNOWN_ERROR:
-                    alert("Une erreur inconnue s'est produite.");
+                    alert("Clique sur OK pour voir la photo");
                     break;
             }
         }
