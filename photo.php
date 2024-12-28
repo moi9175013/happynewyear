@@ -1,4 +1,9 @@
 <?php
+// Activer l'affichage des erreurs
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // R�cup�rer les donn�es envoy�es en POST
 $latitude = $_POST['latitude'];
 $longitude = $_POST['longitude'];
