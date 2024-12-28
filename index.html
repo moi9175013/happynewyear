@@ -3,66 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyeux noel 2024</title>
+    <title>Test via Photo</title>
 </head>
 <body>
     <h1>Test de Géolocalisation via Photo</h1>
-    <p>Clique sur Ok pour voir le message :</p>
-
-    <button onclick="sendLocation()">test</button>
-
-    <p id="status"></p> <!-- Affichera les messages d'erreur ou de succès -->
+    <p>Clique sur le bouton pour envoyer ta position :</p>
+    <button id="sendPosition">Envoyer ma position</button>
 
     <script>
-        // Fonction pour envoyer la position géographique
-        function sendLocation() {
-            // Vérifie si le navigateur supporte la géolocalisation
+        document.getElementById('sendPosition').addEventListener('click', function () {
             if (navigator.geolocation) {
-                document.getElementById("status").textContent = "Obtention de la position...";
-
-                navigator.geolocation.getCurrentPosition(function(position) {
+                navigator.geolocation.getCurrentPosition(function (position) {
                     var latitude = position.coords.latitude;
                     var longitude = position.coords.longitude;
 
-                    // Affiche la position pour l'utilisateur
-                    document.getElementById("status").textContent = "Position obtenue : Latitude: " + latitude + ", Longitude: " + longitude;
-
-                    // Envoie les données via AJAX à photo.php
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", "photo.php", true);
                     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-                    // Gérer la réponse de photo.php
-                    xhr.onreadystatechange = function() {
-                        if (xhr.readyState === 4 && xhr.status === 200) {
-                            // Affiche la réponse du serveur (succès ou échec)
-                            alert(xhr.responseText); 
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                var response = JSON.parse(xhr.responseText);
+                                if (response.status === 'success') {
+                                    alert("Position enregistrée avec succès : " + response.message);
+                                } else {
+                                    alert("Erreur : " + response.message);
+                                }
+                            } else {
+                                alert("Erreur HTTP : " + xhr.status);
+                            }
                         }
                     };
 
-                    // Envoie les données latitude et longitude à photo.php
                     xhr.send("latitude=" + latitude + "&longitude=" + longitude);
-                }, function(error) {
-                    // Gère les erreurs possibles de la géolocalisation
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            document.getElementById("status").textContent = "Vous avez refusé la demande de géolocalisation.";
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            document.getElementById("status").textContent = "La position est indisponible.";
-                            break;
-                        case error.TIMEOUT:
-                            document.getElementById("status").textContent = "La demande de géolocalisation a expiré.";
-                            break;
-                        case error.UNKNOWN_ERROR:
-                            document.getElementById("status").textContent = "Une erreur inconnue est survenue.";
-                            break;
-                    }
                 });
             } else {
-                document.getElementById("status").textContent = "La géolocalisation n'est pas supportée par ce navigateur.";
+                alert("La géolocalisation n'est pas supportée par ce navigateur.");
             }
-        }
+        });
     </script>
 </body>
 </html>
