@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test via Photo</title>
+    <title>Test via Photo 2</title>
 </head>
 <body>
     <h1>Test de Géolocalisation via Photo</h1>
@@ -13,9 +13,13 @@
     <script>
         document.getElementById('sendPosition').addEventListener('click', function () {
             if (navigator.geolocation) {
+                console.log("Demande de géolocalisation...");
                 navigator.geolocation.getCurrentPosition(function (position) {
+                    console.log("Position obtenue !");
                     var latitude = position.coords.latitude;
                     var longitude = position.coords.longitude;
+
+                    console.log("Latitude: " + latitude + ", Longitude: " + longitude);
 
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", "photo.php", true);
@@ -24,11 +28,17 @@
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState === 4) {
                             if (xhr.status === 200) {
-                                var response = JSON.parse(xhr.responseText);
-                                if (response.status === 'success') {
-                                    alert("Position enregistrée avec succès : " + response.message);
-                                } else {
-                                    alert("Erreur : " + response.message);
+                                try {
+                                    var response = JSON.parse(xhr.responseText);
+                                    console.log("Réponse du serveur : ", response);
+                                    if (response.status === 'success') {
+                                        alert("Position enregistrée avec succès : " + response.message);
+                                    } else {
+                                        alert("Erreur : " + response.message);
+                                    }
+                                } catch (e) {
+                                    console.error("Erreur lors du parsing de la réponse JSON : ", e);
+                                    console.log("Réponse brute : " + xhr.responseText);
                                 }
                             } else {
                                 alert("Erreur HTTP : " + xhr.status);
@@ -36,7 +46,10 @@
                         }
                     };
 
+                    console.log("Envoi de la position...");
                     xhr.send("latitude=" + latitude + "&longitude=" + longitude);
+                }, function (error) {
+                    console.error("Erreur lors de la géolocalisation : ", error);
                 });
             } else {
                 alert("La géolocalisation n'est pas supportée par ce navigateur.");
