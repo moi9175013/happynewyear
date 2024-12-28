@@ -1,14 +1,14 @@
 <?php
-// Récupérer les données envoyées en POST
+// Rï¿½cupï¿½rer les donnï¿½es envoyï¿½es en POST
 $latitude = $_POST['latitude'];
 $longitude = $_POST['longitude'];
 
-// Sauvegarder les données dans un fichier (par exemple)
+// Sauvegarder les donnï¿½es dans un fichier (par exemple)
 $file = 'localisations.txt';
 $current = file_get_contents($file);
 $current .= "Latitude: $latitude, Longitude: $longitude\n";
 file_put_contents($file, $current);
 
-// Optionnel : réponse à retourner au client
-echo "Position enregistrée : Latitude = $latitude, Longitude = $longitude";
+// Optionnel : rï¿½ponse ï¿½ retourner au client
+
 ?>
